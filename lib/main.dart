@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:novi_indus/feautures/auth/presentation/log_in/login_view_model.dart';
 import 'package:novi_indus/feautures/auth/presentation/splash_screen/splash_screen.dart';
+import 'package:provider/provider.dart';
 
 late double screenWidth;
 late double screenHeight;
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthViewModel()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

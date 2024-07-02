@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:novi_indus/core/constants/constants.dart';
 import 'package:novi_indus/core/widgets/custom_text.dart';
 import 'package:novi_indus/core/widgets/elevated_button.dart';
+import 'package:novi_indus/core/widgets/snackbar.dart';
 import 'package:novi_indus/core/widgets/text_form_field.dart';
+import 'package:novi_indus/feautures/auth/presentation/home_screen/home_screen.dart';
+import 'package:novi_indus/feautures/auth/presentation/log_in/login_view_model.dart';
 import 'package:novi_indus/main.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -12,7 +16,7 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final TextEditingController emailController = TextEditingController();
     final TextEditingController passwordController = TextEditingController();
-
+    final authViewModel = Provider.of<AuthViewModel>(context);
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
@@ -20,6 +24,7 @@ class LoginScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
+              // log in image
               Container(
                 height: screenHeight * .25,
                 width: screenWidth,
@@ -50,6 +55,7 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
               kSizedBoxH20,
+
               // textform fields
               Padding(
                 padding: const EdgeInsets.all(12.0),
@@ -77,10 +83,44 @@ class LoginScreen extends StatelessWidget {
               // login Button
               kSizedBoxH30,
               kSizedBoxH30,
+              kSizedBoxH30,
+
+              // log in button
               Center(
                 child: ElevatedButtonWidget(
                     width: 380,
-                    onPressed: () {},
+                    onPressed: () async {
+                      if (emailController.text.isNotEmpty &&
+                          passwordController.text.isNotEmpty) {
+                        await authViewModel.login(
+                            emailController.text, passwordController.text);
+                        if (authViewModel.isAuthenticated == true) {
+                          // ignore: use_build_context_synchronously
+                          showCustomSnackbar(context, "Logged in successfully",
+                              kGreenColour, kwhiteColour);
+                          // ignore: use_build_context_synchronously
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) => const HomeScreen(),
+                            ),
+                          );
+                        } else {
+                          showCustomSnackbar(
+                              // ignore: use_build_context_synchronously
+                              context,
+                              "Invalid username or password",
+                              kRedColour,
+                              kwhiteColour);
+                        }
+                      } else {
+                        // Show an error message
+                        showCustomSnackbar(
+                            context,
+                            "Please fill all the fields",
+                            kRedColour,
+                            kwhiteColour);
+                      }
+                    },
                     buttonText: "Login",
                     textSize: 16,
                     textColor: kwhiteColour),
@@ -88,6 +128,7 @@ class LoginScreen extends StatelessWidget {
               const SizedBox(
                 height: 80,
               ),
+
               // texts
               const Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
