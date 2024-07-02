@@ -8,6 +8,7 @@ const kSizedBoxW20 = SizedBox(width: 20);
 const kwhiteColour = Colors.white;
 const kblackColour = Color.fromARGB(255, 0, 0, 0);
 const kGreyColour = Color.fromARGB(255, 218, 217, 217);
+const kLightGreyColour = Color.fromARGB(255, 241, 239, 239);
 const kDarkGreyColour = Color.fromARGB(255, 108, 107, 107);
 const kGreenColour = Color.fromARGB(255, 43, 114, 45);
 const kRedColour = Colors.red;

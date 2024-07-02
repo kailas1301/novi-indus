@@ -10,18 +10,20 @@ class ElevatedButtonWidget extends StatelessWidget {
     required this.width,
     required this.textSize,
     required this.textColor,
+    this.fontWeight,
   });
 
   final void Function() onPressed;
   final String buttonText;
-  final double width; // Width of the button
-  final double textSize; // Text size of the button text
-  final Color textColor; // Text color of the button text
+  final double width;
+  final double textSize;
+  final Color textColor;
+  final FontWeight? fontWeight;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: width, // Set the width of the button
+      width: width,
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
@@ -33,7 +35,7 @@ class ElevatedButtonWidget extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
         ),
         child: CustomText(
-          fontWeight: FontWeight.w700,
+          fontWeight: fontWeight ?? FontWeight.w700,
           text: buttonText,
           color: textColor,
           size: textSize,

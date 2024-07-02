@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:novi_indus/feautures/auth/presentation/log_in/login_view_model.dart';
 import 'package:novi_indus/feautures/auth/presentation/splash_screen/splash_screen.dart';
+import 'package:novi_indus/feautures/patient/presentation/home_screen/patient_vie_model.dart';
 import 'package:provider/provider.dart';
 
 late double screenWidth;
@@ -10,6 +11,7 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthViewModel()),
+        ChangeNotifierProvider(create: (_) => PatientProvider()),
       ],
       child: const MyApp(),
     ),
@@ -18,8 +20,6 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;

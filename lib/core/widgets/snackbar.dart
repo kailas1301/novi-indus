@@ -1,4 +1,3 @@
-// Function to show a custom Snackbar with specified text and colors
 import 'package:flutter/material.dart';
 
 void showCustomSnackbar(

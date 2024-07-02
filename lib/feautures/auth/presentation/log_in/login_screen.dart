@@ -4,7 +4,7 @@ import 'package:novi_indus/core/widgets/custom_text.dart';
 import 'package:novi_indus/core/widgets/elevated_button.dart';
 import 'package:novi_indus/core/widgets/snackbar.dart';
 import 'package:novi_indus/core/widgets/text_form_field.dart';
-import 'package:novi_indus/feautures/auth/presentation/home_screen/home_screen.dart';
+import 'package:novi_indus/feautures/patient/presentation/home_screen/home_screen.dart';
 import 'package:novi_indus/feautures/auth/presentation/log_in/login_view_model.dart';
 import 'package:novi_indus/main.dart';
 import 'package:provider/provider.dart';

@@ -11,6 +11,9 @@ class TextFormFieldWidget extends StatelessWidget {
     this.obscureText,
     this.validatorFunction,
     this.keyboardType,
+    this.prefixIcon,
+    this.hintColor,
+    this.textfieldColor,
   });
 
   final TextEditingController controller;
@@ -19,12 +22,15 @@ class TextFormFieldWidget extends StatelessWidget {
   final bool? obscureText;
   final Function(String?)? validatorFunction;
   final TextInputType? keyboardType;
+  final IconData? prefixIcon;
+  final Color? hintColor;
+  final Color? textfieldColor;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 240, 238, 238),
+        color: textfieldColor ?? const Color.fromARGB(255, 246, 242, 242),
         borderRadius: BorderRadius.circular(10.0),
         border: Border.all(color: kGreyColour),
         boxShadow: [
@@ -56,7 +62,7 @@ class TextFormFieldWidget extends StatelessWidget {
           hintStyle: GoogleFonts.openSans(
             fontSize: 14,
             fontWeight: FontWeight.w600,
-            color: kDarkGreyColour,
+            color: hintColor ?? kDarkGreyColour,
           ),
           floatingLabelStyle: GoogleFonts.openSans(
               fontSize: 14,
@@ -86,6 +92,12 @@ class TextFormFieldWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(10.0),
             borderSide: const BorderSide(color: Colors.transparent),
           ),
+          prefixIcon: prefixIcon != null
+              ? Icon(
+                  prefixIcon,
+                  color: kGreyColour,
+                )
+              : null,
         ),
         validator: validatorFunction != null
             ? (value) => validatorFunction!(value)
