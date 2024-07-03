@@ -21,7 +21,9 @@ class AuthService {
       print("sucessfull login: ${response.statusCode}");
       final data = jsonDecode(response.body);
       final token = data['token'];
-      saveToken(token);
+      final executive = data["user_details"]["name"];
+      saveToken(token, executive);
+      print(executive);
       return data["status"];
     } else {
       print("Failed to login: ${response.statusCode}");
@@ -29,15 +31,22 @@ class AuthService {
     }
   }
 
-  Future<void> saveToken(String token) async {
+  Future<void> saveToken(String token, String executive) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('auth_token', token);
+    await prefs.setString('executive', executive);
   }
 
   Future<String> retrieveToken() async {
     final prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('auth_token');
     return token ?? '';
+  }
+
+  Future<String> retrieveExecutive() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? executive = prefs.getString('executive');
+    return executive ?? '';
   }
 
   Future<void> removeToken() async {

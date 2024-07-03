@@ -34,4 +34,18 @@ class Branch {
       isActive: json['is_active'],
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'patients_count': patientsCount,
+      'location': location,
+      'phone': phone,
+      'mail': mail,
+      'address': address,
+      'gst': gst,
+      'is_active': isActive,
+    };
+  }
 }

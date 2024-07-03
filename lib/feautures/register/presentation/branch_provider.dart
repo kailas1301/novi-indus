@@ -8,18 +8,15 @@ class BranchProvider with ChangeNotifier {
   bool _isLoading = false;
   String? _errorMessage;
 
-  // Constructor
   BranchProvider() {
-    fetchBranches(); // Fetch branches when the provider is created
+    fetchBranches();
   }
 
-  // Method to select a branch
   void selectBranch(Branch? branch) {
     _selectedBranch = branch;
     notifyListeners();
   }
 
-  // Method to fetch branches from the service
   Future<void> fetchBranches() async {
     _isLoading = true;
     _errorMessage = null;
@@ -28,11 +25,10 @@ class BranchProvider with ChangeNotifier {
     try {
       final branchService = BranchService();
       _branches = await branchService.fetchBranches();
-      // Set initial selectedBranch to the first branch if available
       if (_branches.isNotEmpty) {
-        _selectedBranch = _branches.first;
+        _selectedBranch = null; // Ensure no branch is selected initially
       } else {
-        _selectedBranch = null; // Or set a default branch if appropriate
+        _selectedBranch = null;
       }
     } catch (e) {
       _errorMessage = e.toString();
@@ -42,15 +38,11 @@ class BranchProvider with ChangeNotifier {
     }
   }
 
-  // Method to access branches
   List<Branch> getBranches() => _branches;
 
-  // Method to access selectedBranch
   Branch? getSelectedBranch() => _selectedBranch;
 
-  // Method to check if loading
   bool getIsLoading() => _isLoading;
 
-  // Method to access error message
   String? getErrorMessage() => _errorMessage;
 }

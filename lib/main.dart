@@ -7,6 +7,7 @@ import 'package:novi_indus/feautures/register/presentation/date_provider.dart';
 import 'package:novi_indus/feautures/register/presentation/location_provider.dart';
 import 'package:novi_indus/feautures/register/presentation/payment_provider.dart';
 import 'package:novi_indus/feautures/register/presentation/time_provider.dart';
+import 'package:novi_indus/feautures/register/presentation/treatments_provider.dart';
 import 'package:provider/provider.dart';
 
 late double screenWidth;
@@ -22,6 +23,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => PaymentProvider()),
         ChangeNotifierProvider(create: (_) => DateProvider()),
         ChangeNotifierProvider(create: (_) => TimeProvider()),
+        ChangeNotifierProvider(create: (_) => TreatmentProvider()),
       ],
       child: const MyApp(),
     ),
@@ -34,13 +36,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     screenWidth = MediaQuery.of(context).size.width;
     screenHeight = MediaQuery.of(context).size.height;
-    return MaterialApp(
+    return const MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const SplashScreen(),
+      home: SplashScreen(),
     );
   }
 }

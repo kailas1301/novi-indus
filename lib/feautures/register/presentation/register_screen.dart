@@ -9,9 +9,12 @@ import 'package:novi_indus/feautures/register/data/model/branch_model.dart';
 import 'package:novi_indus/feautures/register/presentation/date_provider.dart';
 import 'package:novi_indus/feautures/register/presentation/payment_provider.dart';
 import 'package:novi_indus/feautures/register/presentation/time_provider.dart';
+import 'package:novi_indus/feautures/register/presentation/treatment_dialougue.dart';
 import 'package:provider/provider.dart';
 import 'package:novi_indus/feautures/register/presentation/location_provider.dart';
 import 'package:novi_indus/feautures/register/presentation/branch_provider.dart';
+import 'package:novi_indus/feautures/register/presentation/treatments_provider.dart';
+import 'package:intl/intl.dart';
 
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({super.key});
@@ -31,7 +34,9 @@ class RegisterScreen extends StatelessWidget {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<BranchProvider>(context, listen: false).fetchBranches();
+      Provider.of<TreatmentProvider>(context, listen: false).fetchTreatments();
     });
+
     return Scaffold(
       backgroundColor: kwhiteColour,
       body: Column(
@@ -150,7 +155,8 @@ class RegisterScreen extends StatelessWidget {
                         return const Center(child: CircularProgressIndicator());
                       } else if (branchProvider.getErrorMessage() != null) {
                         return Center(
-                            child: Text(branchProvider.getErrorMessage()!));
+                          child: Text(branchProvider.getErrorMessage()!),
+                        );
                       } else {
                         return Container(
                           height: 65,
@@ -169,11 +175,22 @@ class RegisterScreen extends StatelessWidget {
                             ],
                           ),
                           child: DropdownButtonFormField<Branch>(
-                            icon: Icon(Icons.arrow_downward),
+                            icon: const Icon(Icons.arrow_drop_down),
                             value: branchProvider.getSelectedBranch(),
-                            items: branchProvider
-                                .getBranches()
-                                .map((branch) => DropdownMenuItem<Branch>(
+                            items: [
+                              DropdownMenuItem<Branch>(
+                                value: null,
+                                child: Text(
+                                  "Select a branch",
+                                  style: GoogleFonts.openSans(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                    color: kGreyColour,
+                                  ),
+                                ),
+                              ),
+                              ...branchProvider.getBranches().map(
+                                    (branch) => DropdownMenuItem<Branch>(
                                       value: branch,
                                       child: Text(
                                         branch.name,
@@ -183,8 +200,9 @@ class RegisterScreen extends StatelessWidget {
                                           color: kDarkGreyColour,
                                         ),
                                       ),
-                                    ))
-                                .toList(),
+                                    ),
+                                  ),
+                            ],
                             onChanged: (value) {
                               branchProvider.selectBranch(value);
                             },
@@ -202,6 +220,14 @@ class RegisterScreen extends StatelessWidget {
                                 borderSide: BorderSide.none,
                               ),
                             ),
+                            hint: Text(
+                              "Select a branch",
+                              style: GoogleFonts.openSans(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: kGreyColour,
+                              ),
+                            ),
                           ),
                         );
                       }
@@ -211,9 +237,114 @@ class RegisterScreen extends StatelessWidget {
                   const CustomText(
                       text: "Treatments", color: kblackColour, size: 14),
                   kSizedBoxH10,
+                  Consumer<TreatmentProvider>(
+                    builder: (context, treatmentProvider, child) {
+                      final selectedTreatments =
+                          treatmentProvider.getSelectedTreatments();
+                      final maleCount = treatmentProvider.getMaleCount();
+                      final femaleCount = treatmentProvider.getFemaleCount();
+
+                      return Column(
+                        children: [
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: selectedTreatments.length,
+                            itemBuilder: (context, index) {
+                              final treatment = selectedTreatments[index];
+                              return ListTile(
+                                title: Text(treatment['name']),
+                                subtitle: Text(
+                                    'ID: ${treatment['id']} - Price: \$${treatment['price']}'),
+                                trailing: IconButton(
+                                  icon: const Icon(Icons.remove_circle,
+                                      color: Colors.red),
+                                  onPressed: () {
+                                    treatmentProvider
+                                        .removeTreatment(treatment['id']);
+                                  },
+                                ),
+                              );
+                            },
+                          ),
+                          kSizedBoxH10,
+                          // Show Male and Female Count
+                          Row(
+                            children: [
+                              Row(
+                                children: [
+                                  kSizedBoxW30,
+                                  CustomText(
+                                    fontWeight: FontWeight.w500,
+                                    text: 'Male',
+                                    color: kGreenColour,
+                                    size: 16,
+                                  ),
+                                  kSizedBoxW10,
+                                  Container(
+                                    width: 45,
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.grey),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        maleCount.toString(),
+                                        style: const TextStyle(
+                                            fontSize: 16, color: kGreenColour),
+                                      ),
+                                    ),
+                                  ),
+                                  kSizedBoxW30,
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  CustomText(
+                                    fontWeight: FontWeight.w500,
+                                    text: 'Female',
+                                    color: kGreenColour,
+                                    size: 16,
+                                  ),
+                                  kSizedBoxW10,
+                                  Container(
+                                    width: 45,
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.grey),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        femaleCount.toString(),
+                                        style: const TextStyle(
+                                            fontSize: 16, color: kGreenColour),
+                                      ),
+                                    ),
+                                  ),
+                                  kSizedBoxW30,
+                                  kSizedBoxW20,
+                                  IconButton(
+                                      onPressed: () {},
+                                      icon: Icon(
+                                        Icons.edit_outlined,
+                                        size: 25,
+                                        color: kGreenColour,
+                                      ))
+                                ],
+                              ),
+                            ],
+                          )
+                        ],
+                      );
+                    },
+                  ),
+                  kSizedBoxH20,
                   Padding(
-                    padding: const EdgeInsets.all(15.0),
+                    padding: const EdgeInsets.all(10.0),
                     child: Container(
+                      width: double.infinity,
                       decoration: BoxDecoration(
                         color: kLightGreyColour,
                         borderRadius: BorderRadius.circular(12.0),
@@ -222,19 +353,23 @@ class RegisterScreen extends StatelessWidget {
                   ),
                   Center(
                     child: ElevatedButtonWidget(
-                        fontWeight: FontWeight.w500,
-                        buttonColor: kGreenLightColour,
-                        onPressed: () {},
-                        buttonText: "+ Add Treatments",
-                        width: 380,
-                        textSize: 16,
-                        textColor: kblackColour),
+                      fontWeight: FontWeight.w500,
+                      buttonColor: kGreenLightColour,
+                      onPressed: () {
+                        showTreatmentDialog(context);
+                      },
+                      buttonText: "+ Add Treatments",
+                      width: 380,
+                      textSize: 16,
+                      textColor: kblackColour,
+                    ),
                   ),
                   kSizedBoxH20,
                   const CustomText(
                       text: "Total Amount", color: kblackColour, size: 14),
                   kSizedBoxH10,
                   TextFormFieldWidget(
+                    keyboardType: TextInputType.number,
                     textfieldColor: kwhiteColour,
                     hintColor: kGreyColour,
                     controller: totalAmountController,
@@ -244,6 +379,7 @@ class RegisterScreen extends StatelessWidget {
                       text: "Discount Amount", color: kblackColour, size: 14),
                   kSizedBoxH10,
                   TextFormFieldWidget(
+                    keyboardType: TextInputType.number,
                     textfieldColor: kwhiteColour,
                     hintColor: kGreyColour,
                     controller: discountAmountController,
@@ -284,15 +420,17 @@ class RegisterScreen extends StatelessWidget {
                       text: "Advance Amount", color: kblackColour, size: 14),
                   kSizedBoxH10,
                   TextFormFieldWidget(
+                    keyboardType: TextInputType.number,
                     textfieldColor: kwhiteColour,
                     hintColor: kGreyColour,
-                    controller: addressController,
+                    controller: advanceAmountController,
                   ),
                   kSizedBoxH20,
                   const CustomText(
                       text: "Balance Amount", color: kblackColour, size: 14),
                   kSizedBoxH10,
                   TextFormFieldWidget(
+                    keyboardType: TextInputType.number,
                     textfieldColor: kwhiteColour,
                     hintColor: kGreyColour,
                     controller: balanceAmountController,
@@ -340,11 +478,9 @@ class RegisterScreen extends StatelessWidget {
                               Expanded(
                                 child: Text(
                                   dateProvider.getSelectedDate() != null
-                                      ? dateProvider
-                                          .getSelectedDate()!
-                                          .toLocal()
-                                          .toString()
-                                          .split(' ')[0] // Format Date
+                                      ? DateFormat('dd/MM/yyyy').format(
+                                          dateProvider
+                                              .getSelectedDate()!) // Format Date
                                       : '', // Placeholder Text
                                   style: GoogleFonts.poppins(
                                     fontSize: 16,
@@ -366,72 +502,97 @@ class RegisterScreen extends StatelessWidget {
                   ),
                   kSizedBoxH20,
                   const CustomText(
-                      text: "Treatment Time", color: kblackColour, size: 14),
+                    text: "Treatment Time",
+                    color: kblackColour,
+                    size: 14,
+                  ),
                   kSizedBoxH10,
                   Consumer<TimeProvider>(
                     builder: (context, timeProvider, child) {
                       return Row(
                         children: [
                           Expanded(
-                            child: DropdownButtonFormField<int>(
-                              value: timeProvider.getSelectedHour(),
-                              items: List.generate(24, (index) => index)
-                                  .map((hour) {
-                                return DropdownMenuItem<int>(
-                                  value: hour,
-                                  child: Text(hour.toString()),
-                                );
-                              }).toList(),
-                              onChanged: (value) {
-                                if (value != null) {
-                                  timeProvider.selectHour(value);
-                                }
-                              },
-                              decoration: InputDecoration(
-                                hintText: "Hours",
-                                hintStyle: GoogleFonts.openSans(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  color: kGreyColour,
-                                ),
-                                filled: true,
-                                fillColor: kwhiteColour,
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide.none,
+                            child: Container(
+                              height: 65,
+                              padding: EdgeInsets.all(1),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                    color: kGreyColour,
+                                    width: 1), // Set the border color and width
+                                borderRadius: BorderRadius.circular(
+                                    10), // Optional: Rounded corners
+                              ),
+                              child: DropdownButtonFormField<int>(
+                                value: timeProvider.getSelectedHour(),
+                                items: List.generate(24, (index) => index)
+                                    .map((hour) {
+                                  return DropdownMenuItem<int>(
+                                    value: hour,
+                                    child: Text(hour.toString()),
+                                  );
+                                }).toList(),
+                                onChanged: (value) {
+                                  if (value != null) {
+                                    timeProvider.selectHour(value);
+                                  }
+                                },
+                                decoration: InputDecoration(
+                                  hintText: "Hours",
+                                  hintStyle: GoogleFonts.openSans(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                    color: kGreyColour,
+                                  ),
+                                  filled: true,
+                                  fillColor: kwhiteColour,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide.none,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
                           kSizedBoxW10,
                           Expanded(
-                            child: DropdownButtonFormField<int>(
-                              value: timeProvider.getSelectedMinute(),
-                              items: List.generate(60, (index) => index)
-                                  .map((minute) {
-                                return DropdownMenuItem<int>(
-                                  value: minute,
-                                  child:
-                                      Text(minute.toString().padLeft(2, '0')),
-                                );
-                              }).toList(),
-                              onChanged: (value) {
-                                if (value != null) {
-                                  timeProvider.selectMinute(value);
-                                }
-                              },
-                              decoration: InputDecoration(
-                                hintText: "Minutes",
-                                hintStyle: GoogleFonts.openSans(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  color: kGreyColour,
-                                ),
-                                filled: true,
-                                fillColor: kwhiteColour,
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide.none,
+                            child: Container(
+                              height: 65,
+                              padding: EdgeInsets.all(1),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                    color: kGreyColour,
+                                    width: 1), // Set the border color and width
+                                borderRadius: BorderRadius.circular(
+                                    10), // Optional: Rounded corners
+                              ),
+                              child: DropdownButtonFormField<int>(
+                                value: timeProvider.getSelectedMinute(),
+                                items: List.generate(60, (index) => index)
+                                    .map((minute) {
+                                  return DropdownMenuItem<int>(
+                                    value: minute,
+                                    child:
+                                        Text(minute.toString().padLeft(2, '0')),
+                                  );
+                                }).toList(),
+                                onChanged: (value) {
+                                  if (value != null) {
+                                    timeProvider.selectMinute(value);
+                                  }
+                                },
+                                decoration: InputDecoration(
+                                  hintText: "Minutes",
+                                  hintStyle: GoogleFonts.openSans(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                    color: kGreyColour,
+                                  ),
+                                  filled: true,
+                                  fillColor: kwhiteColour,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide.none,
+                                  ),
                                 ),
                               ),
                             ),
@@ -463,4 +624,13 @@ class RegisterScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+void showTreatmentDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return const TreatmentDialog();
+    },
+  );
 }
