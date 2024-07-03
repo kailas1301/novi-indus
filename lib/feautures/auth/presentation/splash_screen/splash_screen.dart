@@ -8,19 +8,15 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Check authentication status
     AuthService authService = AuthService();
     authService.retrieveToken().then((token) {
-      // Delayed navigation after 3 seconds
       Future.delayed(const Duration(seconds: 3), () {
         if (token.isNotEmpty) {
-          // User is logged in, navigate to HomeScreen
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => HomeScreen()),
+            MaterialPageRoute(builder: (context) => const HomeScreen()),
           );
         } else {
-          // No token found, navigate to LoginScreen
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => const LoginScreen()),

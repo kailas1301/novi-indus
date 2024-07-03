@@ -6,7 +6,7 @@ class TextFormFieldWidget extends StatelessWidget {
   const TextFormFieldWidget({
     super.key,
     required this.controller,
-    required this.hintText,
+    this.hintText,
     this.errorText,
     this.obscureText,
     this.validatorFunction,
@@ -17,7 +17,7 @@ class TextFormFieldWidget extends StatelessWidget {
   });
 
   final TextEditingController controller;
-  final String hintText;
+  final String? hintText;
   final String? errorText;
   final bool? obscureText;
   final Function(String?)? validatorFunction;
@@ -29,6 +29,7 @@ class TextFormFieldWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 65,
       decoration: BoxDecoration(
         color: textfieldColor ?? const Color.fromARGB(255, 246, 242, 242),
         borderRadius: BorderRadius.circular(10.0),
@@ -52,23 +53,12 @@ class TextFormFieldWidget extends StatelessWidget {
         obscureText: obscureText ?? false,
         controller: controller,
         decoration: InputDecoration(
-          labelStyle: GoogleFonts.poppins(
-            fontWeight: FontWeight.normal,
-            color: kDarkGreyColour,
-            fontSize: 13,
-          ),
           hintFadeDuration: const Duration(seconds: 1),
-          floatingLabelBehavior: FloatingLabelBehavior.auto,
           hintStyle: GoogleFonts.openSans(
             fontSize: 14,
             fontWeight: FontWeight.w600,
             color: hintColor ?? kDarkGreyColour,
           ),
-          floatingLabelStyle: GoogleFonts.openSans(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              color: kDarkGreyColour),
-          floatingLabelAlignment: FloatingLabelAlignment.start,
           fillColor: kGreyColour,
           hintText: hintText,
           errorText: errorText, // Custom error text

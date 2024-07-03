@@ -11,6 +11,7 @@ class ElevatedButtonWidget extends StatelessWidget {
     required this.textSize,
     required this.textColor,
     this.fontWeight,
+    this.buttonColor,
   });
 
   final void Function() onPressed;
@@ -18,6 +19,7 @@ class ElevatedButtonWidget extends StatelessWidget {
   final double width;
   final double textSize;
   final Color textColor;
+  final Color? buttonColor;
   final FontWeight? fontWeight;
 
   @override
@@ -27,7 +29,7 @@ class ElevatedButtonWidget extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: kGreenColour,
+          backgroundColor: buttonColor ?? kGreenColour,
           elevation: 4,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0),

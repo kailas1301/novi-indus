@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:novi_indus/core/constants/constants.dart';
+import 'package:novi_indus/core/widgets/custom_appbar.dart';
 import 'package:novi_indus/core/widgets/custom_text.dart';
 import 'package:novi_indus/core/widgets/elevated_button.dart';
 import 'package:novi_indus/core/widgets/text_form_field.dart';
 import 'package:novi_indus/feautures/patient/presentation/home_screen/patient_vie_model.dart';
+import 'package:novi_indus/feautures/register/presentation/register_screen.dart';
 import 'package:novi_indus/main.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -24,33 +26,7 @@ class HomeScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               kSizedBoxH30,
-              SizedBox(
-                height: 80,
-                child: AppBar(
-                  leading: IconButton(
-                    icon: const Icon(
-                      Icons.arrow_back,
-                      size: 30,
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  actions: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: InkWell(
-                        onTap: () {},
-                        child: Image.asset(
-                          'assets/images/clarity_bell-line.png',
-                          width: 30,
-                          height: 30,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              const CustomAppBar(),
               SizedBox(
                 height: 80,
                 child: Padding(
@@ -298,7 +274,11 @@ class HomeScreen extends StatelessWidget {
                 textSize: 17,
                 width: 380,
                 buttonText: "Register Now",
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const RegisterScreen(),
+                  ));
+                },
               ),
             ),
           ),
